@@ -1,0 +1,18 @@
+{
+  "name": "automated-ad-purple-team-range",
+  "version": "1.0.0",
+  "description": "Automated Active Directory Purple Team Attack & Detection Range Portal",
+  "scripts": {
+    "start": "npx serve portal",
+    "build": "echo 'Portal ready for deployment'"
+  },
+  "keywords": [
+    "active-directory",
+    "purple-team",
+    "sigma",
+    "sysmon",
+    "detection-engineering"
+  ],
+  "author": "Ravishka Rathnayaka",
+  "license": "MIT"
+}
