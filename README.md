@@ -12,6 +12,7 @@ An enterprise-grade, zero-cost, automated purple teaming pipeline designed to de
 
 ## Table of Contents
 - [Architecture Overview](#architecture-overview)
+- [Interactive Purple Team Web Portal](#interactive-purple-team-web-portal)
 - [MITRE ATT&CK Matrix Mapping](#mitre-attck-matrix-mapping)
 - [Repository Structure](#repository-structure)
 - [Prerequisites & System Requirements](#prerequisites--system-requirements)
@@ -80,6 +81,29 @@ flowchart TD
 
 ---
 
+## Interactive Purple Team Web Portal
+
+The project includes an operational web portal and live simulation console located in [`portal/index.html`](portal/index.html).
+
+### Key Features:
+- **Live Purple Team Simulator**: Emulate attacks (Kerberoasting, AS-REP Roasting, DCSync, Pass the Hash) and stream terminal output in real time.
+- **Dynamic Sigma Correlation Engine**: Instantly links emitted Windows Event IDs to evaluated Sigma rule logic with matching field highlights.
+- **Range Topology Visualizer**: Interactive network inspection of Domain Controller (`DC01`), Workstation (`WS01`), and Docker SIEM.
+- **Telemetry Inspector**: Filter and examine raw Windows Security and Sysmon JSON logs.
+- **Enterprise Hardening Playbooks**: Actionable mitigation commands for Active Directory defense.
+
+To launch the portal:
+```bash
+# Option 1: Open directly in your default browser
+Start-Process "portal/index.html"
+
+# Option 2: Serve over local HTTP
+python -m http.server 8000 --directory portal
+# Visit http://localhost:8000 in your browser
+```
+
+---
+
 ## MITRE ATT&CK Matrix Mapping
 
 | Phase | MITRE Tactic | Technique ID | Technique Name | Windows / Sysmon Telemetry | High-Fidelity Sigma Rule | Severity |
@@ -130,6 +154,8 @@ flowchart TD
 ├── docker/
 │   ├── docker-compose.yml                 # Local Elasticsearch 8.11 & Kibana stack
 │   └── .env.example                       # Port and authentication environment configurations
+├── portal/
+│   └── index.html                         # Interactive Purple Team Cyber Range Console & Visualizer
 ├── tests/
 │   ├── test_sigma_syntax.py               # pySigma specification and syntax validator
 │   └── test_detection_matching.py         # Pytest harness verifying rule matching on test events
