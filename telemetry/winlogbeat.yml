@@ -1,0 +1,61 @@
+# ==============================================================================
+# Winlogbeat Configuration for AD Attack & Detection Range
+# Forwards Windows Security, Sysmon, and PowerShell logs to SIEM
+# ==============================================================================
+
+winlogbeat.event_logs:
+  - name: Security
+    level: critical, error, warning, information
+    event_id: 4624, 4625, 4662, 4688, 4689, 4720, 4726, 4728, 4732, 4738, 4768, 4769, 4776, 5136
+    ignore_older: 72h
+
+  - name: Microsoft-Windows-Sysmon/Operational
+    level: critical, error, warning, information
+    ignore_older: 72h
+
+  - name: Microsoft-Windows-PowerShell/Operational
+    event_id: 4103, 4104
+    ignore_older: 72h
+
+  - name: System
+    level: critical, error, warning
+    ignore_older: 72h
+
+# ------------------------------------------------------------------------------
+# Processors and Enrichment
+# ------------------------------------------------------------------------------
+processors:
+  - add_host_metadata:
+      netinfo.enabled: true
+  - add_cloud_metadata: ~
+  - add_fields:
+      target: env
+      fields:
+        environment: "purple-team-ad-range"
+        organization: "CORP"
+
+# ------------------------------------------------------------------------------
+# Elasticsearch Output (Points to Docker Host SIEM)
+# Default gateway/host address from Vagrant host-only network is 192.168.56.1
+# ------------------------------------------------------------------------------
+output.elasticsearch:
+  hosts: ["http://192.168.56.1:9200", "http://localhost:9200"]
+  username: "elastic"
+  password: "Changeme123!"
+  index: "winlogbeat-%{+yyyy.MM.dd}"
+  ssl.verification_mode: "none"
+
+setup.template.name: "winlogbeat"
+setup.template.pattern: "winlogbeat-*"
+setup.ilm.enabled: false
+
+# ------------------------------------------------------------------------------
+# Logging & Diagnostics
+# ------------------------------------------------------------------------------
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: C:\ProgramData\winlogbeat\Logs
+  name: winlogbeat
+  keepfiles: 5
+  permissions: 0600

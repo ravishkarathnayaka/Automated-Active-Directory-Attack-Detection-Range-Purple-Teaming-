@@ -1,0 +1,28 @@
+title: Kerberoasting Service Ticket Request with RC4 Encryption
+id: 9a65f903-82b5-4ff1-b21f-82a93eb87541
+status: test
+description: Detects Service Principal Name (SPN) Kerberos ticket requests (TGS-REQ) utilizing weak RC4-HMAC encryption (0x17), indicative of Kerberoasting attacks.
+references:
+  - https://attack.mitre.org/techniques/T1558/003/
+  - https://adsecurity.org/?p=3458
+author: Purple Team Detection Engineering
+date: 2026/09/11
+modified: 2026/09/11
+tags:
+  - attack.credential_access
+  - attack.t1558.003
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4769
+    TicketEncryptionType: '0x17'
+    Status: '0x0'
+  filter_machine_accounts:
+    ServiceName|endswith: '$'
+  condition: selection and not filter_machine_accounts
+falsepositives:
+  - Legacy applications or services that only support RC4 encryption
+  - Misconfigured third-party service accounts
+level: high

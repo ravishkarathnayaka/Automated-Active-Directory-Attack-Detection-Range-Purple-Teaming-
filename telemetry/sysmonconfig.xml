@@ -1,0 +1,136 @@
+<!--
+  Modular Sysmon Configuration for Active Directory Attack & Detection Range
+  Optimized for credential access detection, process tracing, and Kerberos abuse.
+  Schema Version: 4.90
+-->
+<Sysmon schemaversion="4.90">
+  <!-- Hash algorithms to compute for process creation and image loading -->
+  <HashAlgorithms>MD5,SHA256,IMPHASH</HashAlgorithms>
+  <CheckRevocation/>
+
+  <EventFiltering>
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 1: Process Creation                                         -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="ProcessCreation" groupRelation="or">
+      <ProcessCreate onmatch="include">
+        <!-- Capture all command line activity from script interpreters and living-off-the-land binaries -->
+        <Image condition="end with">\powershell.exe</Image>
+        <Image condition="end with">\pwsh.exe</Image>
+        <Image condition="end with">\cmd.exe</Image>
+        <Image condition="end with">\wscript.exe</Image>
+        <Image condition="end with">\cscript.exe</Image>
+        <Image condition="end with">\rundll32.exe</Image>
+        <Image condition="end with">\regsvr32.exe</Image>
+        <Image condition="end with">\mshta.exe</Image>
+        <Image condition="end with">\certutil.exe</Image>
+        <Image condition="end with">\wmic.exe</Image>
+        <Image condition="end with">\klist.exe</Image>
+        <Image condition="end with">\nltest.exe</Image>
+        <Image condition="end with">\dsquery.exe</Image>
+        <Image condition="end with">\adfind.exe</Image>
+        <Image condition="end with">\mimikatz.exe</Image>
+        <Image condition="end with">\rubeus.exe</Image>
+        <!-- Suspicious command line patterns -->
+        <CommandLine condition="contains">-enc</CommandLine>
+        <CommandLine condition="contains">-encodedcommand</CommandLine>
+        <CommandLine condition="contains">-w hidden</CommandLine>
+        <CommandLine condition="contains">-windowstyle hidden</CommandLine>
+        <CommandLine condition="contains">kerberos::</CommandLine>
+        <CommandLine condition="contains">sekurlsa::</CommandLine>
+        <CommandLine condition="contains">lsadump::</CommandLine>
+        <CommandLine condition="contains">Get-DomainUser</CommandLine>
+        <CommandLine condition="contains">Get-DomainSPN</CommandLine>
+        <CommandLine condition="contains">KerberosRequestorSecurityToken</CommandLine>
+      </ProcessCreate>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 3: Network Connection                                       -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="NetworkConnect" groupRelation="or">
+      <NetworkConnect onmatch="include">
+        <!-- Monitor network connections initiated by administrative and script tools -->
+        <Image condition="end with">\powershell.exe</Image>
+        <Image condition="end with">\pwsh.exe</Image>
+        <Image condition="end with">\cmd.exe</Image>
+        <Image condition="end with">\wscript.exe</Image>
+        <Image condition="end with">\cscript.exe</Image>
+        <Image condition="end with">\rundll32.exe</Image>
+        <Image condition="end with">\certutil.exe</Image>
+        <Image condition="end with">\wmic.exe</Image>
+        <!-- Monitor Active Directory and Kerberos ports -->
+        <DestinationPort condition="is">88</DestinationPort>     <!-- Kerberos -->
+        <DestinationPort condition="is">389</DestinationPort>    <!-- LDAP -->
+        <DestinationPort condition="is">636</DestinationPort>    <!-- LDAPS -->
+        <DestinationPort condition="is">445</DestinationPort>    <!-- SMB -->
+        <DestinationPort condition="is">135</DestinationPort>    <!-- RPC Endpoint Mapper -->
+        <DestinationPort condition="is">5985</DestinationPort>   <!-- WinRM HTTP -->
+        <DestinationPort condition="is">5986</DestinationPort>   <!-- WinRM HTTPS -->
+      </NetworkConnect>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 7: Image Loaded                                             -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="ImageLoad" groupRelation="or">
+      <ImageLoad onmatch="include">
+        <!-- Credential access / SAM / LSA libraries -->
+        <ImageLoaded condition="end with">\samlib.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\vaultcli.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\wdigest.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\cryptdll.dll</ImageLoaded>
+      </ImageLoad>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 8: CreateRemoteThread                                       -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="CreateRemoteThread" groupRelation="or">
+      <CreateRemoteThread onmatch="include">
+        <TargetImage condition="end with">\lsass.exe</TargetImage>
+        <TargetImage condition="end with">\spoolsv.exe</TargetImage>
+        <TargetImage condition="end with">\explorer.exe</TargetImage>
+      </CreateRemoteThread>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 10: ProcessAccess (Targeting LSASS for credential theft)    -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="ProcessAccess" groupRelation="or">
+      <ProcessAccess onmatch="include">
+        <TargetImage condition="end with">\lsass.exe</TargetImage>
+      </ProcessAccess>
+      <ProcessAccess onmatch="exclude">
+        <!-- Exclude legitimate Windows services to keep signal fidelity high -->
+        <SourceImage condition="is">C:\Windows\System32\svchost.exe</SourceImage>
+        <SourceImage condition="is">C:\Windows\System32\services.exe</SourceImage>
+        <SourceImage condition="is">C:\Windows\System32\wininit.exe</SourceImage>
+        <SourceImage condition="is">C:\Windows\System32\csrss.exe</SourceImage>
+      </ProcessAccess>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 11: FileCreate (Drops in staging directories)               -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="FileCreate" groupRelation="or">
+      <FileCreate onmatch="include">
+        <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
+        <TargetFilename condition="contains">\Users\Public\</TargetFilename>
+        <TargetFilename condition="contains">\Windows\Temp\</TargetFilename>
+      </FileCreate>
+    </RuleGroup>
+
+    <!-- ==================================================================== -->
+    <!-- EVENT ID 12, 13: Registry Modifications                              -->
+    <!-- ==================================================================== -->
+    <RuleGroup name="RegistryEvent" groupRelation="or">
+      <RegistryEvent onmatch="include">
+        <TargetObject condition="contains">\CurrentVersion\Run</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\RunOnce</TargetObject>
+        <TargetObject condition="contains">\System\CurrentControlSet\Control\SecurityProviders</TargetObject>
+        <TargetObject condition="contains">\System\CurrentControlSet\Control\Lsa</TargetObject>
+      </RegistryEvent>
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>

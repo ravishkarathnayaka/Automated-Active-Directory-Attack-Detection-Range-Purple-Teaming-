@@ -1,0 +1,96 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ==============================================================================
+# Automated Active Directory Attack & Detection Range (Purple Teaming)
+# Multi-Machine Vagrantfile: Domain Controller (DC01) & Domain Workstation (WS01)
+# ==============================================================================
+
+Vagrant.configure("2") do |config|
+  # Global Settings
+  config.vm.boot_timeout = 1800
+  config.vm.communicator = "winrm"
+  config.winrm.username = "vagrant"
+  config.winrm.password = "vagrant"
+  config.winrm.timeout = 1800
+  config.winrm.retry_limit = 30
+
+  # ----------------------------------------------------------------------------
+  # 1. Primary Domain Controller: DC01 (corp.local)
+  # ----------------------------------------------------------------------------
+  config.vm.define "DC01" do |dc|
+    dc.vm.box = "StefanScherer/windows_2019"
+    dc.vm.hostname = "DC01"
+
+    # Private network for isolated Active Directory lab
+    dc.vm.network "private_network", ip: "192.168.56.10"
+
+    # Port forwarding for WinRM and management
+    dc.vm.network "forwarded_port", guest: 5985, host: 55985, id: "winrm", auto_correct: true
+    dc.vm.network "forwarded_port", guest: 3389, host: 53389, id: "rdp", auto_correct: true
+
+    # VirtualBox VM Hardware Allocation
+    dc.vm.provider "virtualbox" do |vb|
+      vb.name = "AD-Range-DC01"
+      vb.memory = 4096
+      vb.cpus = 2
+      vb.gui = false
+      vb.linked_clone = true
+      vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+
+    # Synced folders mapping scripts, telemetry, and attacks
+    dc.vm.synced_folder "scripts", "C:/vagrant/scripts"
+    dc.vm.synced_folder "../telemetry", "C:/vagrant/telemetry"
+    dc.vm.synced_folder "../attacks", "C:/vagrant/attacks"
+
+    # Provisioning Step 1: Install AD DS, create forest corp.local, configure DNS
+    dc.vm.provision "install-adds", type: "powershell", path: "scripts/provision_dc.ps1"
+
+    # Provisioning Step 2: Populate OUs, users, groups, and roastable accounts
+    dc.vm.provision "populate-domain", type: "powershell", path: "scripts/populate_domain.ps1"
+
+    # Provisioning Step 3: Install Sysmon, enable Audit Policies, configure Winlogbeat
+    dc.vm.provision "telemetry-dc", type: "powershell", path: "scripts/install_telemetry.ps1"
+  end
+
+  # ----------------------------------------------------------------------------
+  # 2. Domain Joined Workstation: WS01
+  # ----------------------------------------------------------------------------
+  config.vm.define "WS01" do |ws|
+    ws.vm.box = "StefanScherer/windows_10"
+    ws.vm.hostname = "WS01"
+
+    # Private network interface in the same subnet as DC01
+    ws.vm.network "private_network", ip: "192.168.56.20"
+
+    # Port forwarding
+    ws.vm.network "forwarded_port", guest: 5985, host: 55986, id: "winrm", auto_correct: true
+    ws.vm.network "forwarded_port", guest: 3389, host: 53390, id: "rdp", auto_correct: true
+
+    # VirtualBox VM Hardware Allocation
+    ws.vm.provider "virtualbox" do |vb|
+      vb.name = "AD-Range-WS01"
+      vb.memory = 3072
+      vb.cpus = 2
+      vb.gui = false
+      vb.linked_clone = true
+      vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+
+    # Synced folders mapping scripts, telemetry, and attacks
+    ws.vm.synced_folder "scripts", "C:/vagrant/scripts"
+    ws.vm.synced_folder "../telemetry", "C:/vagrant/telemetry"
+    ws.vm.synced_folder "../attacks", "C:/vagrant/attacks"
+
+    # Provisioning Step 1: Set DNS to DC01 and join corp.local domain
+    ws.vm.provision "domain-join", type: "powershell", path: "scripts/provision_workstation.ps1"
+
+    # Provisioning Step 2: Install Sysmon, enable Audit Policies, configure Winlogbeat
+    ws.vm.provision "telemetry-ws", type: "powershell", path: "scripts/install_telemetry.ps1"
+  end
+end

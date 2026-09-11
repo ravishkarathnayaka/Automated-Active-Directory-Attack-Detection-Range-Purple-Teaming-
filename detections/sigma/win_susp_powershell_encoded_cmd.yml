@@ -1,0 +1,40 @@
+title: Suspicious Encoded or Hidden PowerShell Execution
+id: c4e3b129-8472-4752-9c31-92f7d312bc88
+status: test
+description: Detects the execution of PowerShell commands using encoded command arguments or hidden window parameters, commonly used by adversaries for defense evasion.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://attack.mitre.org/techniques/T1027/
+author: Purple Team Detection Engineering
+date: 2026/09/11
+modified: 2026/09/11
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_process:
+    - Image|endswith:
+        - '\powershell.exe'
+        - '\pwsh.exe'
+    - OriginalFileName:
+        - 'PowerShell.EXE'
+        - 'pwsh.dll'
+  selection_flags:
+    CommandLine|contains:
+      - ' -e '
+      - ' -enc '
+      - ' -encodedcommand '
+      - ' -EncodedCommand '
+      - ' -w hidden'
+      - ' -windowstyle hidden'
+      - ' -WindowStyle Hidden'
+  condition: selection_process and selection_flags
+falsepositives:
+  - Legitimate enterprise deployment scripts utilizing encoded parameters (e.g. SCCM, Intune)
+  - Administrative management scripts
+level: medium

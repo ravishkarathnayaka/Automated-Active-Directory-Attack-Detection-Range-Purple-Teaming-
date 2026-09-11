@@ -1,0 +1,19 @@
+{
+  "EventID": 4768,
+  "Channel": "Security",
+  "Provider_Name": "Microsoft-Windows-Security-Auditing",
+  "TimeCreated": "2026-09-11T14:31:22.654321Z",
+  "Computer": "DC01.corp.local",
+  "TargetUserName": "usr_roastable",
+  "TargetDomainName": "CORP",
+  "TargetSid": "S-1-5-21-382947192-238491823-192837482-1106",
+  "TicketOptions": "0x40810010",
+  "TicketEncryptionType": "0x17",
+  "PreAuthType": "0",
+  "Status": "0x0",
+  "CertIssuerName": "",
+  "CertSerialNumber": "",
+  "CertThumbprint": "",
+  "IpAddress": "::ffff:192.168.56.20",
+  "IpPort": "49684"
+}

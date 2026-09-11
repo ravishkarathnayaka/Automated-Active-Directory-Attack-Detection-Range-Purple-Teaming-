@@ -1,0 +1,15 @@
+{
+  "EventID": 4769,
+  "Channel": "Security",
+  "Provider_Name": "Microsoft-Windows-Security-Auditing",
+  "TimeCreated": "2026-09-11T14:30:15.123456Z",
+  "Computer": "DC01.corp.local",
+  "TargetUserName": "svc_sqlserver@corp.local",
+  "ServiceName": "MSSQLSvc/db01.corp.local:1433",
+  "ServiceSid": "S-1-5-21-382947192-238491823-192837482-1105",
+  "TicketOptions": "0x40810000",
+  "TicketEncryptionType": "0x17",
+  "Status": "0x0",
+  "IpAddress": "::ffff:192.168.56.20",
+  "IpPort": "49682"
+}

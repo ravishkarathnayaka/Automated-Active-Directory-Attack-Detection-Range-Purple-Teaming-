@@ -1,0 +1,74 @@
+version: '3.8'
+
+# ==============================================================================
+# Local SIEM Stack: Elasticsearch & Kibana
+# Used to ingest forwarded Windows Event Logs from Winlogbeat
+# ==============================================================================
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION:-8.11.3}
+    container_name: ad-range-elasticsearch
+    environment:
+      - node.name=es01
+      - cluster.name=ad-range-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-Changeme123!}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - xpack.license.self_generated.type=basic
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "${ES_PORT:-9200}:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - siem-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -u elastic:${ELASTIC_PASSWORD:-Changeme123!} http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION:-8.11.3}
+    container_name: ad-range-kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      - SERVER_NAME=kibana
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-Changeme123!}
+    ports:
+      - "${KIBANA_PORT:-5601}:5601"
+    volumes:
+      - kibanadata:/usr/share/kibana/data
+    networks:
+      - siem-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601/api/status | grep -q 'HTTP/1.1 200 OK\\|HTTP/1.1 302 Found'"
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  esdata:
+    driver: local
+  kibanadata:
+    driver: local
+
+networks:
+  siem-net:
+    driver: bridge

@@ -1,0 +1,28 @@
+title: Kerberos AS-REP Roasting Ticket Request Without Pre-Authentication
+id: e4f82635-321a-4643-9876-c56434567210
+status: test
+description: Detects Kerberos Ticket Granting Ticket (TGT) requests where pre-authentication was not required (PreAuthType 0), indicating potential AS-REP roasting activity.
+references:
+  - https://attack.mitre.org/techniques/T1558/004/
+  - https://blog.harmj0y.net/activedirectory/roasting-as-reps/
+author: Purple Team Detection Engineering
+date: 2026/09/11
+modified: 2026/09/11
+tags:
+  - attack.credential_access
+  - attack.t1558.004
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4768
+    PreAuthType: '0'
+    Status: '0x0'
+  filter_machine_accounts:
+    TargetUserName|endswith: '$'
+  condition: selection and not filter_machine_accounts
+falsepositives:
+  - Legitimate legacy accounts intentionally configured with DONT_REQ_PREAUTH
+  - Non-standard Unix/Linux identity integrations
+level: high

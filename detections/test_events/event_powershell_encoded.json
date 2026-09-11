@@ -1,0 +1,14 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Provider_Name": "Microsoft-Windows-Sysmon",
+  "TimeCreated": "2026-09-11T14:33:10.000000Z",
+  "Computer": "WS01.corp.local",
+  "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "OriginalFileName": "PowerShell.EXE",
+  "CommandLine": "powershell.exe -NoProfile -NonInteractive -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAA=",
+  "CurrentDirectory": "C:\\Users\\Administrator\\",
+  "User": "CORP\\Administrator",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe /c run_purple_team.bat"
+}
