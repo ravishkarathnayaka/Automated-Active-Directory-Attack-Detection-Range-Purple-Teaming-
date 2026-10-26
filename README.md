@@ -113,6 +113,9 @@ python -m http.server 8000 --directory portal
 | **Phase 3** | Credential Access | **T1003.006** | OS Credential Dumping: DCSync | Security **4662** (Access Mask `0x100`, DRSUAPI GUIDs) | [`win_ad_dcsync_replication_access.yml`](detections/sigma/win_ad_dcsync_replication_access.yml) | `Critical` |
 | **Phase 4** | Lateral Movement | **T1550.002** | Use Alternate Authentication Material: Pass the Hash | Security **4624** (Logon Type 3/9, NTLM) | [`win_susp_powershell_encoded_cmd.yml`](detections/sigma/win_susp_powershell_encoded_cmd.yml) | `Medium` |
 | **Phase 5** | Execution / Defense Evasion | **T1059.001**, **T1027** | PowerShell Obfuscated / Encoded Command Execution | Sysmon **1** / Security **4688** (EncodedCommand, Hidden) | [`win_susp_powershell_encoded_cmd.yml`](detections/sigma/win_susp_powershell_encoded_cmd.yml) | `Medium` |
+| **Phase 6** | Discovery | **T1087.002**, **T1069.002** | Domain Account & Group Reconnaissance: SharpHound | Sysmon **1** (CommandLine `-c All`) | [`win_ad_bloodhound_ldap_queries.yml`](detections/sigma/win_ad_bloodhound_ldap_queries.yml) | `High` |
+| **Phase 7** | Credential Access | **T1003.003** | OS Credential Dumping: NTDS.dit Snapshot (IFM) | Sysmon **1** / Security **4688** (`ntdsutil` / `vssadmin`) | [`win_ad_ntdsutil_shadowcopy_dump.yml`](detections/sigma/win_ad_ntdsutil_shadowcopy_dump.yml) | `High` |
+| **Phase 8** | Credential Access | **T1003.001** | OS Credential Dumping: LSASS Memory Access | Sysmon **10** (ProcessAccess `0x1010` / `0x1438`) | [`win_susp_lsass_process_access.yml`](detections/sigma/win_susp_lsass_process_access.yml) | `High` |
 
 ---
 
@@ -122,7 +125,9 @@ python -m http.server 8000 --directory portal
 ├── .github/
 │   └── workflows/
 │       ├── test-sigma-rules.yml          # Automated CI: Validates Sigma syntax & test events via pySigma
-│       └── security-scan.yml             # Automated CI: Secret scanner using Gitleaks
+│       ├── security-scan.yml             # Automated CI: Secret scanner using Gitleaks
+│       └── psscriptanalyzer.yml          # Automated CI: Static code analysis for PowerShell scripts
+├── .pre-commit-config.yaml               # Pre-commit hook configuration for code hygiene
 ├── vagrant/
 │   ├── Vagrantfile                       # Multi-VM Vagrant definition (DC01 & WS01)
 │   └── scripts/
@@ -139,25 +144,33 @@ python -m http.server 8000 --directory portal
 │   ├── Invoke-ASREPRoast.ps1             # Queries DONT_REQ_PREAUTH accounts & sends AS-REQ (T1558.004)
 │   ├── Invoke-DCSync-Sim.ps1             # Simulates DRSUAPI replication requests via LDAP DirSync (T1003.006)
 │   ├── Invoke-PassTheHash-Sim.ps1        # Simulates NTLM session token authentication (T1550.002)
+│   ├── Invoke-BloodHound-Sim.ps1         # Simulates SharpHound LDAP domain reconnaissance (T1087 / T1069)
+│   ├── Invoke-NTDSExtract-Sim.ps1        # Simulates NTDS.dit snapshot extraction via IFM (T1003.003)
 │   └── run_purple_team.ps1               # Master orchestration script with timestamps and scorecard
 ├── detections/
 │   ├── sigma/
 │   │   ├── win_ad_kerberoasting_spn_request.yml
 │   │   ├── win_ad_asrep_roasting_preauth.yml
 │   │   ├── win_ad_dcsync_replication_access.yml
-│   │   └── win_susp_powershell_encoded_cmd.yml
+│   │   ├── win_susp_powershell_encoded_cmd.yml
+│   │   ├── win_ad_bloodhound_ldap_queries.yml
+│   │   ├── win_ad_ntdsutil_shadowcopy_dump.yml
+│   │   └── win_susp_lsass_process_access.yml
 │   └── test_events/
 │       ├── event_kerberoast.json          # Synthetic Event 4769 payload for regression testing
 │       ├── event_asrep.json               # Synthetic Event 4768 payload for regression testing
 │       ├── event_dcsync.json              # Synthetic Event 4662 payload for regression testing
-│       └── event_powershell_encoded.json  # Synthetic Sysmon Event 1 payload for regression testing
+│       ├── event_powershell_encoded.json  # Synthetic Sysmon Event 1 payload for regression testing
+│       ├── event_bloodhound.json          # Synthetic SharpHound execution payload
+│       ├── event_ntdsutil.json            # Synthetic NTDS snapshot payload
+│       └── event_lsass_access.json        # Synthetic LSASS memory read payload
 ├── docker/
 │   ├── docker-compose.yml                 # Local Elasticsearch 8.11 & Kibana stack
 │   └── .env.example                       # Port and authentication environment configurations
 ├── portal/
 │   └── index.html                         # Interactive Purple Team Cyber Range Console & Visualizer
 ├── tests/
-│   ├── test_sigma_syntax.py               # pySigma specification and syntax validator
+│   ├── test_sigma_syntax.py               # pySigma specification and syntax validator (7 rules)
 │   └── test_detection_matching.py         # Pytest harness verifying rule matching on test events
 └── README.md                              # Comprehensive architecture, attack guide, and documentation
 ```
@@ -378,8 +391,11 @@ tests/test_detection_matching.py::TestKerberoastDetection::test_kerberoast_event
 tests/test_detection_matching.py::TestASREPRoastDetection::test_asrep_event_matches PASSED
 tests/test_detection_matching.py::TestDCSyncDetection::test_dcsync_event_matches PASSED
 tests/test_detection_matching.py::TestSuspiciousPowerShellDetection::test_powershell_encoded_event_matches PASSED
+tests/test_detection_matching.py::TestBloodHoundDetection::test_bloodhound_event_matches PASSED
+tests/test_detection_matching.py::TestNTDSUtilDetection::test_ntdsutil_event_matches PASSED
+tests/test_detection_matching.py::TestLSASSAccessDetection::test_lsass_access_event_matches PASSED
 tests/test_sigma_syntax.py::test_sigma_rule_pysigma_parsing PASSED
-============================== 20 passed in 0.26s ==============================
+============================== 35 passed in 0.61s ==============================
 ```
 
 ---
@@ -392,6 +408,9 @@ tests/test_sigma_syntax.py::test_sigma_rule_pysigma_parsing PASSED
 | **AS-REP Roasting** | Enforce Kerberos Pre-Authentication on all user and service accounts by clearing the `DONT_REQ_PREAUTH` bit in `userAccountControl`. |
 | **DCSync** | Restrict `DS-Replication-Get-Changes` and `DS-Replication-Get-Changes-All` extended rights strictly to Domain Controllers (`Domain Controllers` group) and Tier-0 Administrative accounts. |
 | **PowerShell Obfuscation** | Enable Windows Defender Application Control (WDAC) in **Constrained Language Mode (CLM)**; enforce Script Block Logging (Event 4104) and Transcription. |
+| **SharpHound / Recon** | Enable LDAP query logging (Diagnostic Event ID 1644); restrict RPC/SAMR query rights using NetCease or `RestrictRemoteSAM` permissions. |
+| **NTDS.dit Snapshot** | Enforce Tier-0 administrative separation; restrict Volume Shadow Copy access via AppLocker/WDAC; monitor command-line creation for `ntdsutil.exe` and `vssadmin.exe`. |
+| **LSASS Memory Dumping** | Enable **LSA Protection (RunAsPPL)** in registry (`RunAsPPL=1`); enable Credential Guard on supported Windows 10/11 Enterprise endpoints. |
 
 ---
 

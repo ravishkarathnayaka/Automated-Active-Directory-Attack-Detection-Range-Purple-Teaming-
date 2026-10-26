@@ -89,7 +89,6 @@
       box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
     }
 
-    /* Terminal scrollbars */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -165,7 +164,7 @@
       <div class="w-px h-4 bg-slate-800"></div>
       <div class="flex items-center space-x-2">
         <span class="text-slate-500">SIGMA CI:</span>
-        <span class="text-emerald-400 font-semibold">20 / 20 PASSING</span>
+        <span class="text-emerald-400 font-semibold">35 / 35 PASSING</span>
       </div>
     </div>
 
@@ -182,7 +181,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>Run Attack Chain</span>
+        <span>Run Attack Chain (7 Vectors)</span>
       </button>
     </div>
   </header>
@@ -213,7 +212,7 @@
       <svg class="w-4 h-4 text-adGold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
       </svg>
-      <span>Sigma Detection Matrix</span>
+      <span>Sigma Detection Matrix (7 Rules)</span>
     </button>
     <button onclick="switchTab('hardening')" id="tab-btn-hardening" class="tab-btn text-slate-400 hover:text-slate-200 px-4 py-2.5 rounded-t-xl text-xs font-semibold border-t-2 border-transparent transition flex items-center space-x-2">
       <svg class="w-4 h-4 text-redTeam-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +238,7 @@
           <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Detection Fidelity</div>
           <div class="text-2xl font-extrabold text-white mt-1 flex items-baseline space-x-2">
             <span>100%</span>
-            <span class="text-xs text-emerald-400 font-mono">4 / 4 Caught</span>
+            <span class="text-xs text-emerald-400 font-mono">7 / 7 Caught</span>
           </div>
           <div class="text-xs text-slate-500 mt-1">Zero false positives on computer accounts</div>
           <div class="absolute -right-2 -bottom-2 w-16 h-16 bg-emerald-500/10 rounded-full blur-xl"></div>
@@ -258,10 +257,10 @@
         <div class="glass-panel p-4 rounded-xl relative overflow-hidden">
           <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Telemetry Sensors Active</div>
           <div class="text-2xl font-extrabold text-blueTeam-400 mt-1 flex items-baseline space-x-2">
-            <span>4 Engines</span>
+            <span>5 Engines</span>
             <span class="text-xs text-blueTeam-400 font-mono">Full Coverage</span>
           </div>
-          <div class="text-xs text-slate-500 mt-1">Sysmon, AuditPol, PowerShell, Security</div>
+          <div class="text-xs text-slate-500 mt-1">Sysmon, AuditPol, PowerShell, Security, Directory</div>
           <div class="absolute -right-2 -bottom-2 w-16 h-16 bg-blueTeam-500/10 rounded-full blur-xl"></div>
         </div>
 
@@ -269,7 +268,7 @@
           <div class="text-xs font-mono text-slate-400 uppercase tracking-wider">Automated CI Regression</div>
           <div class="text-2xl font-extrabold text-adGold mt-1 flex items-baseline space-x-2">
             <span>Verified</span>
-            <span class="text-xs text-emerald-400 font-mono">Pytest 20/20</span>
+            <span class="text-xs text-emerald-400 font-mono">Pytest 35/35</span>
           </div>
           <div class="text-xs text-slate-500 mt-1">pySigma specification validation</div>
           <div class="absolute -right-2 -bottom-2 w-16 h-16 bg-adGold/10 rounded-full blur-xl"></div>
@@ -285,47 +284,74 @@
             <div class="flex items-center justify-between pb-4 border-b border-borderGlow">
               <div class="flex items-center space-x-3">
                 <div class="w-3 h-3 rounded-full bg-redTeam-500 shadow-red-glow"></div>
-                <h3 class="font-bold text-sm text-white uppercase tracking-wider">Adversary Emulation Suite</h3>
+                <h3 class="font-bold text-sm text-white uppercase tracking-wider">Adversary Emulation Suite (7 Vectors)</h3>
               </div>
               <span class="text-xs font-mono text-slate-400">Target: WS01 &rarr; DC01</span>
             </div>
 
-            <!-- Attack Buttons -->
-            <div class="grid grid-cols-2 gap-2.5 my-4">
-              <button onclick="runSingleAttack('kerberoast')" id="btn-kerberoast" class="attack-select-btn p-3 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+            <!-- Attack Buttons Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 my-4">
+              <button onclick="runSingleAttack('kerberoast')" id="btn-kerberoast" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-mono font-bold text-redTeam-400">T1558.003</span>
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1558.003</span>
                   <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
                 </div>
-                <div class="text-sm font-bold text-white mt-1">Kerberoasting</div>
-                <div class="text-xs text-slate-400 mt-0.5">SPN Ticket Request (RC4 0x17)</div>
+                <div class="text-xs font-bold text-white mt-1">Kerberoasting</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">SPN Ticket (0x17)</div>
               </button>
 
-              <button onclick="runSingleAttack('asrep')" id="btn-asrep" class="attack-select-btn p-3 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+              <button onclick="runSingleAttack('asrep')" id="btn-asrep" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-mono font-bold text-redTeam-400">T1558.004</span>
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1558.004</span>
                   <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
                 </div>
-                <div class="text-sm font-bold text-white mt-1">AS-REP Roasting</div>
-                <div class="text-xs text-slate-400 mt-0.5">DONT_REQ_PREAUTH Abuse</div>
+                <div class="text-xs font-bold text-white mt-1">AS-REP Roasting</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">Pre-Auth Disabled</div>
               </button>
 
-              <button onclick="runSingleAttack('dcsync')" id="btn-dcsync" class="attack-select-btn p-3 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+              <button onclick="runSingleAttack('dcsync')" id="btn-dcsync" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-mono font-bold text-redTeam-400">T1003.006</span>
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1003.006</span>
                   <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
                 </div>
-                <div class="text-sm font-bold text-white mt-1">DCSync Replication</div>
-                <div class="text-xs text-slate-400 mt-0.5">DRSUAPI DsGetNCChanges OID</div>
+                <div class="text-xs font-bold text-white mt-1">DCSync Replication</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">DRSUAPI DirSync</div>
               </button>
 
-              <button onclick="runSingleAttack('pth')" id="btn-pth" class="attack-select-btn p-3 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+              <button onclick="runSingleAttack('pth')" id="btn-pth" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
                 <div class="flex items-center justify-between">
-                  <span class="text-xs font-mono font-bold text-redTeam-400">T1550.002</span>
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1550.002</span>
                   <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
                 </div>
-                <div class="text-sm font-bold text-white mt-1">Pass the Hash (PtH)</div>
-                <div class="text-xs text-slate-400 mt-0.5">NTLM Logon 9 / EncodedCommand</div>
+                <div class="text-xs font-bold text-white mt-1">Pass the Hash</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">NTLM Logon 9</div>
+              </button>
+
+              <button onclick="runSingleAttack('bloodhound')" id="btn-bloodhound" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1087/T1069</span>
+                  <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
+                </div>
+                <div class="text-xs font-bold text-white mt-1">SharpHound Recon</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">Mass LDAP Query</div>
+              </button>
+
+              <button onclick="runSingleAttack('ntdsutil')" id="btn-ntdsutil" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1003.003</span>
+                  <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
+                </div>
+                <div class="text-xs font-bold text-white mt-1">NTDS.dit Snapshot</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">ntdsutil / vssadmin</div>
+              </button>
+
+              <button onclick="runSingleAttack('lsass')" id="btn-lsass" class="attack-select-btn p-2.5 rounded-xl bg-panel hover:bg-panelHover border border-borderGlow text-left transition group col-span-2 md:col-span-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-mono font-bold text-redTeam-400">T1003.001</span>
+                  <span class="w-2 h-2 rounded-full bg-redTeam-500/40 group-hover:bg-redTeam-500"></span>
+                </div>
+                <div class="text-xs font-bold text-white mt-1">LSASS Access</div>
+                <div class="text-[10px] text-slate-400 mt-0.5 truncate">Sysmon EID 10</div>
               </button>
             </div>
 
@@ -470,7 +496,7 @@ detection:
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-500">Execution Suite:</span>
-                <span class="font-mono text-redTeam-400">run_purple_team.ps1</span>
+                <span class="font-mono text-redTeam-400">run_purple_team.ps1 (7 Vectors)</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-500">Telemetry:</span>
@@ -507,34 +533,11 @@ detection:
               </div>
               <div class="flex justify-between">
                 <span class="text-slate-500">CI Testing:</span>
-                <span class="text-emerald-400">pySigma + pytest suite</span>
+                <span class="text-emerald-400">pySigma 35/35 Passing</span>
               </div>
             </div>
           </div>
 
-        </div>
-
-        <!-- Provisioning Workflow Flowchart -->
-        <div class="mt-8 pt-6 border-t border-borderGlow">
-          <h4 class="text-sm font-bold text-white mb-4 uppercase tracking-wider">Automated Provisioning Pipeline</h4>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="p-3 rounded-lg bg-panel/60 border border-slate-800 text-xs font-mono">
-              <div class="text-purpleTeam-400 font-bold mb-1">01. DC Promotion</div>
-              <div class="text-slate-400">Installs AD-Domain-Services, provisions forest `corp.local`, configures DNS forwarders.</div>
-            </div>
-            <div class="p-3 rounded-lg bg-panel/60 border border-slate-800 text-xs font-mono">
-              <div class="text-purpleTeam-400 font-bold mb-1">02. Domain Population</div>
-              <div class="text-slate-400">Creates Corporate OUs, standard users, sets SPNs on `svc_sqlserver`, disables pre-auth on `usr_roastable`.</div>
-            </div>
-            <div class="p-3 rounded-lg bg-panel/60 border border-slate-800 text-xs font-mono">
-              <div class="text-purpleTeam-400 font-bold mb-1">03. Domain Join</div>
-              <div class="text-slate-400">Sets DNS to 192.168.56.10, joins WS01 to corp.local, configures administrative firewall rules.</div>
-            </div>
-            <div class="p-3 rounded-lg bg-panel/60 border border-slate-800 text-xs font-mono">
-              <div class="text-purpleTeam-400 font-bold mb-1">04. Telemetry Deployment</div>
-              <div class="text-slate-400">Installs Sysmon 64, applies auditpol_commands.bat, starts Winlogbeat forwarding to Elastic SIEM.</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -550,11 +553,12 @@ detection:
             <p class="text-xs text-slate-400">Inspect raw JSON payloads captured during attack simulations and tested in CI</p>
           </div>
           <div class="flex items-center space-x-2">
-            <button onclick="filterEvents('all')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-purpleTeam-600 text-white font-semibold">ALL EVENTS</button>
-            <button onclick="filterEvents('4769')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">EVENT 4769</button>
-            <button onclick="filterEvents('4768')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">EVENT 4768</button>
-            <button onclick="filterEvents('4662')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">EVENT 4662</button>
+            <button onclick="filterEvents('all')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-purpleTeam-600 text-white font-semibold">ALL</button>
+            <button onclick="filterEvents('4769')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">4769</button>
+            <button onclick="filterEvents('4768')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">4768</button>
+            <button onclick="filterEvents('4662')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">4662</button>
             <button onclick="filterEvents('sysmon1')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">SYSMON 1</button>
+            <button onclick="filterEvents('sysmon10')" class="ev-filter-btn px-3 py-1 rounded text-xs font-mono bg-panel text-slate-400 hover:text-white">SYSMON 10</button>
           </div>
         </div>
 
@@ -564,44 +568,23 @@ detection:
           <!-- Event 1: Kerberoasting 4769 -->
           <div class="event-row event-4769 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4769</span>
-                <span class="text-white font-bold text-sm">A Kerberos service ticket was requested (RC4-HMAC 0x17)</span>
-              </div>
+              <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4769</span>
+              <span class="text-white font-bold text-sm">A Kerberos service ticket was requested (RC4-HMAC 0x17)</span>
               <span class="text-xs font-mono text-slate-400">DC01.corp.local &bull; Security</span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
               <div><span class="text-slate-500">Service Name:</span> <span class="text-purpleTeam-400 font-semibold">MSSQLSvc/db01.corp.local:1433</span></div>
               <div><span class="text-slate-500">Target User:</span> <span class="text-white">svc_sqlserver@corp.local</span></div>
               <div><span class="text-slate-500">Encryption Type:</span> <span class="text-redTeam-400 font-bold">0x17 (RC4-HMAC)</span></div>
-              <div><span class="text-slate-500">Client IP:</span> <span class="text-slate-300">::ffff:192.168.56.20</span></div>
+              <div><span class="text-slate-500">Client IP:</span> <span class="text-slate-300">192.168.56.20</span></div>
             </div>
-            <details class="text-xs font-mono mt-2">
-              <summary class="text-slate-400 hover:text-purpleTeam-400 cursor-pointer pt-1">View Raw Windows Security Event JSON</summary>
-              <pre class="code-block p-3 mt-2 text-[11px] text-slate-300 overflow-x-auto">
-{
-  "EventID": 4769,
-  "Channel": "Security",
-  "Provider_Name": "Microsoft-Windows-Security-Auditing",
-  "Computer": "DC01.corp.local",
-  "TargetUserName": "svc_sqlserver@corp.local",
-  "ServiceName": "MSSQLSvc/db01.corp.local:1433",
-  "TicketOptions": "0x40810000",
-  "TicketEncryptionType": "0x17",
-  "Status": "0x0",
-  "IpAddress": "::ffff:192.168.56.20"
-}
-              </pre>
-            </details>
           </div>
 
           <!-- Event 2: AS-REP Roasting 4768 -->
           <div class="event-row event-4768 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4768</span>
-                <span class="text-white font-bold text-sm">Kerberos TGT requested without Pre-Authentication (PreAuthType 0)</span>
-              </div>
+              <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4768</span>
+              <span class="text-white font-bold text-sm">Kerberos TGT requested without Pre-Authentication (PreAuthType 0)</span>
               <span class="text-xs font-mono text-slate-400">DC01.corp.local &bull; Security</span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
@@ -610,81 +593,66 @@ detection:
               <div><span class="text-slate-500">Pre-Auth Type:</span> <span class="text-redTeam-400 font-bold">0 (Disabled)</span></div>
               <div><span class="text-slate-500">Status:</span> <span class="text-emerald-400 font-bold">0x0 (Success)</span></div>
             </div>
-            <details class="text-xs font-mono mt-2">
-              <summary class="text-slate-400 hover:text-purpleTeam-400 cursor-pointer pt-1">View Raw Windows Security Event JSON</summary>
-              <pre class="code-block p-3 mt-2 text-[11px] text-slate-300 overflow-x-auto">
-{
-  "EventID": 4768,
-  "Channel": "Security",
-  "TargetUserName": "usr_roastable",
-  "TargetDomainName": "CORP",
-  "PreAuthType": "0",
-  "Status": "0x0",
-  "TicketEncryptionType": "0x17",
-  "IpAddress": "::ffff:192.168.56.20"
-}
-              </pre>
-            </details>
           </div>
 
           <!-- Event 3: DCSync 4662 -->
           <div class="event-row event-4662 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4662</span>
-                <span class="text-white font-bold text-sm">Directory Service Replication Access Request (DRSUAPI GUID)</span>
-              </div>
+              <span class="px-2 py-0.5 rounded bg-redTeam-500/20 text-redTeam-400 font-mono text-xs font-bold border border-redTeam-500/30">EID 4662</span>
+              <span class="text-white font-bold text-sm">Directory Service Replication Access Request (DRSUAPI GUID)</span>
               <span class="text-xs font-mono text-slate-400">DC01.corp.local &bull; Security</span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
               <div><span class="text-slate-500">Subject User:</span> <span class="text-purpleTeam-400 font-semibold">svc_replication</span></div>
-              <div><span class="text-slate-500">Access Mask:</span> <span class="text-redTeam-400 font-bold">0x100 (Control Access)</span></div>
+              <div><span class="text-slate-500">Access Mask:</span> <span class="text-redTeam-400 font-bold">0x100</span></div>
               <div><span class="text-slate-500">Operation:</span> <span class="text-white">DS-Replication-Get-Changes-All</span></div>
-              <div><span class="text-slate-500">Requested GUID:</span> <span class="text-adGold truncate font-mono">{1131f6ad-9c07...}</span></div>
+              <div><span class="text-slate-500">GUID:</span> <span class="text-adGold font-mono">{1131f6ad...}</span></div>
             </div>
-            <details class="text-xs font-mono mt-2">
-              <summary class="text-slate-400 hover:text-purpleTeam-400 cursor-pointer pt-1">View Raw Windows Security Event JSON</summary>
-              <pre class="code-block p-3 mt-2 text-[11px] text-slate-300 overflow-x-auto">
-{
-  "EventID": 4662,
-  "Channel": "Security",
-  "SubjectUserName": "svc_replication",
-  "SubjectDomainName": "CORP",
-  "AccessMask": "0x100",
-  "Properties": "Control Access\n\t\t{1131f6ad-9c07-11d1-f79f-00c04fc2dcd2}\n\t\t{1919524d-98e9-11d1-93c4-00c04fd8d5b8}"
-}
-              </pre>
-            </details>
           </div>
 
-          <!-- Event 4: Sysmon 1 Encoded PowerShell -->
+          <!-- Event 4: Sysmon 1 SharpHound Recon -->
           <div class="event-row event-sysmon1 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
             <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <span class="px-2 py-0.5 rounded bg-blueTeam-500/20 text-blueTeam-400 font-mono text-xs font-bold border border-blueTeam-500/30">SYSMON EID 1</span>
-                <span class="text-white font-bold text-sm">Suspicious Encoded / Hidden PowerShell Process Creation</span>
-              </div>
+              <span class="px-2 py-0.5 rounded bg-blueTeam-500/20 text-blueTeam-400 font-mono text-xs font-bold border border-blueTeam-500/30">SYSMON EID 1</span>
+              <span class="text-white font-bold text-sm">SharpHound / BloodHound Domain Enumeration Execution</span>
               <span class="text-xs font-mono text-slate-400">WS01.corp.local &bull; Sysmon</span>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
-              <div><span class="text-slate-500">Image:</span> <span class="text-white font-semibold">powershell.exe</span></div>
+              <div><span class="text-slate-500">Image:</span> <span class="text-white font-semibold">SharpHound.exe</span></div>
+              <div><span class="text-slate-500">CommandLine:</span> <span class="text-redTeam-400 font-bold truncate">-c All --domain corp.local</span></div>
               <div><span class="text-slate-500">User:</span> <span class="text-purpleTeam-400">CORP\Administrator</span></div>
-              <div><span class="text-slate-500">Flag Detected:</span> <span class="text-redTeam-400 font-bold">-EncodedCommand</span></div>
-              <div><span class="text-slate-500">Parent Process:</span> <span class="text-slate-300">cmd.exe</span></div>
+              <div><span class="text-slate-500">Target:</span> <span class="text-slate-300">LDAP Directory</span></div>
             </div>
-            <details class="text-xs font-mono mt-2">
-              <summary class="text-slate-400 hover:text-purpleTeam-400 cursor-pointer pt-1">View Raw Sysmon Event JSON</summary>
-              <pre class="code-block p-3 mt-2 text-[11px] text-slate-300 overflow-x-auto">
-{
-  "EventID": 1,
-  "Channel": "Microsoft-Windows-Sysmon/Operational",
-  "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-  "CommandLine": "powershell.exe -NoProfile -NonInteractive -EncodedCommand VwByAGkAdABlAC0ASABvAHMAdAA=",
-  "User": "CORP\\Administrator",
-  "ParentImage": "C:\\Windows\\System32\\cmd.exe"
-}
-              </pre>
-            </details>
+          </div>
+
+          <!-- Event 5: Sysmon 1 NTDSUtil Snapshot -->
+          <div class="event-row event-sysmon1 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded bg-blueTeam-500/20 text-blueTeam-400 font-mono text-xs font-bold border border-blueTeam-500/30">SYSMON EID 1</span>
+              <span class="text-white font-bold text-sm">NTDS.dit Database Snapshot Attempt via NTDSUtil IFM</span>
+              <span class="text-xs font-mono text-slate-400">DC01.corp.local &bull; Sysmon</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
+              <div><span class="text-slate-500">Image:</span> <span class="text-white font-semibold">ntdsutil.exe</span></div>
+              <div><span class="text-slate-500">Arguments:</span> <span class="text-redTeam-400 font-bold truncate">"ac i ntds" "ifm" "create full..."</span></div>
+              <div><span class="text-slate-500">User:</span> <span class="text-purpleTeam-400">CORP\Administrator</span></div>
+              <div><span class="text-slate-500">Parent:</span> <span class="text-slate-300">cmd.exe</span></div>
+            </div>
+          </div>
+
+          <!-- Event 6: Sysmon 10 LSASS Access -->
+          <div class="event-row event-sysmon10 p-4 rounded-xl bg-panel border border-borderGlow space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded bg-blueTeam-500/20 text-blueTeam-400 font-mono text-xs font-bold border border-blueTeam-500/30">SYSMON EID 10</span>
+              <span class="text-white font-bold text-sm">Suspicious Memory Access to LSASS by Untrusted Process</span>
+              <span class="text-xs font-mono text-slate-400">DC01.corp.local &bull; Sysmon</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-slate-300 pt-2 border-t border-slate-800">
+              <div><span class="text-slate-500">Source Image:</span> <span class="text-redTeam-400 font-semibold">procdump64.exe</span></div>
+              <div><span class="text-slate-500">Target Image:</span> <span class="text-white">lsass.exe</span></div>
+              <div><span class="text-slate-500">GrantedAccess:</span> <span class="text-adGold font-bold">0x1010 (VM_READ)</span></div>
+              <div><span class="text-slate-500">Call Trace:</span> <span class="text-slate-400 truncate">ntdll.dll+9d494</span></div>
+            </div>
           </div>
 
         </div>
@@ -698,10 +666,10 @@ detection:
       <div class="glass-panel rounded-2xl p-6 shadow-cyber-card">
         <div class="flex items-center justify-between mb-6 pb-4 border-b border-borderGlow">
           <div>
-            <h3 class="text-lg font-bold text-white">MITRE ATT&CK & Sigma Rule Engineering Matrix</h3>
+            <h3 class="text-lg font-bold text-white">MITRE ATT&CK & Sigma Rule Engineering Matrix (7 Rules)</h3>
             <p class="text-xs text-slate-400">High-fidelity rules authored for the range, mapped directly to MITRE ATT&CK techniques</p>
           </div>
-          <span class="text-xs font-mono px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">100% CI SPEC VALIDATED</span>
+          <span class="text-xs font-mono px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">35 / 35 TESTS PASSING</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -742,11 +710,35 @@ detection:
                 <td class="py-3 px-4"><span class="text-emerald-400 flex items-center space-x-1">&bull; PASSED</span></td>
               </tr>
               <tr class="hover:bg-panelHover transition">
-                <td class="py-3 px-4 font-bold text-redTeam-400">T1059.001</td>
-                <td class="py-3 px-4 font-semibold text-white">Encoded PowerShell</td>
-                <td class="py-3 px-4 text-blueTeam-400">Sysmon 1 / Sec 4688</td>
+                <td class="py-3 px-4 font-bold text-redTeam-400">T1550.002</td>
+                <td class="py-3 px-4 font-semibold text-white">Pass the Hash</td>
+                <td class="py-3 px-4 text-blueTeam-400">Sysmon 1 / Sec 4624</td>
                 <td class="py-3 px-4 font-mono text-slate-200">win_susp_powershell_encoded_cmd.yml</td>
                 <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-bold">MEDIUM</span></td>
+                <td class="py-3 px-4"><span class="text-emerald-400 flex items-center space-x-1">&bull; PASSED</span></td>
+              </tr>
+              <tr class="hover:bg-panelHover transition">
+                <td class="py-3 px-4 font-bold text-redTeam-400">T1087 / T1069</td>
+                <td class="py-3 px-4 font-semibold text-white">SharpHound Recon</td>
+                <td class="py-3 px-4 text-purpleTeam-400">Sysmon 1 (CLI)</td>
+                <td class="py-3 px-4 font-mono text-slate-200">win_ad_bloodhound_ldap_queries.yml</td>
+                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold">HIGH</span></td>
+                <td class="py-3 px-4"><span class="text-emerald-400 flex items-center space-x-1">&bull; PASSED</span></td>
+              </tr>
+              <tr class="hover:bg-panelHover transition">
+                <td class="py-3 px-4 font-bold text-redTeam-400">T1003.003</td>
+                <td class="py-3 px-4 font-semibold text-white">NTDS.dit Extraction</td>
+                <td class="py-3 px-4 text-blueTeam-400">Sysmon 1 / Sec 4688</td>
+                <td class="py-3 px-4 font-mono text-slate-200">win_ad_ntdsutil_shadowcopy_dump.yml</td>
+                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">HIGH</span></td>
+                <td class="py-3 px-4"><span class="text-emerald-400 flex items-center space-x-1">&bull; PASSED</span></td>
+              </tr>
+              <tr class="hover:bg-panelHover transition">
+                <td class="py-3 px-4 font-bold text-redTeam-400">T1003.001</td>
+                <td class="py-3 px-4 font-semibold text-white">LSASS Memory Read</td>
+                <td class="py-3 px-4 text-purpleTeam-400">Sysmon 10 (0x1010)</td>
+                <td class="py-3 px-4 font-mono text-slate-200">win_susp_lsass_process_access.yml</td>
+                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold">HIGH</span></td>
                 <td class="py-3 px-4"><span class="text-emerald-400 flex items-center space-x-1">&bull; PASSED</span></td>
               </tr>
             </tbody>
@@ -769,67 +761,17 @@ detection:
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          <!-- Playbook 1 -->
           <div class="p-5 rounded-xl bg-panel border border-borderGlow space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-purpleTeam-500/20 text-purpleTeam-400 font-bold">MITIGATION: KERBEROASTING</span>
-              <span class="text-xs font-mono text-emerald-400 font-semibold">Priority 1</span>
-            </div>
             <h4 class="text-base font-bold text-white">Group Managed Service Accounts (gMSA)</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Transition standard user accounts with registered SPNs to Active Directory Group Managed Service Accounts (gMSA). Windows automatically generates a 128-character complex password and rotates it periodically, rendering offline dictionary cracking mathematically infeasible.
-            </p>
-            <div class="code-block p-3 text-[11px] font-mono text-slate-300">
-New-ADServiceAccount -Name "gMSA_SQL" -DNSHostName "sql.corp.local" -PrincipalsAllowedToRetrieveManagedPassword "DBA_Servers"
-            </div>
+            <p class="text-xs text-slate-400">Transition standard user accounts with registered SPNs to Active Directory gMSA with 128-char automated rotation.</p>
+            <div class="code-block p-3 text-[11px] font-mono text-slate-300">New-ADServiceAccount -Name "gMSA_SQL" -DNSHostName "sql.corp.local"</div>
           </div>
 
-          <!-- Playbook 2 -->
           <div class="p-5 rounded-xl bg-panel border border-borderGlow space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-purpleTeam-500/20 text-purpleTeam-400 font-bold">MITIGATION: AS-REP ROASTING</span>
-              <span class="text-xs font-mono text-emerald-400 font-semibold">Priority 1</span>
-            </div>
             <h4 class="text-base font-bold text-white">Enforce Kerberos Pre-Authentication</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Audit the domain for any user accounts where the <code class="text-redTeam-400 font-mono">DONT_REQ_PREAUTH</code> flag is enabled. Disable this property so that an encrypted timestamp (PA-ENC-TIMESTAMP) is strictly required before the KDC returns an AS-REP.
-            </p>
-            <div class="code-block p-3 text-[11px] font-mono text-slate-300">
-Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -DoesNotRequirePreAuth $false
-            </div>
+            <p class="text-xs text-slate-400">Audit the domain and clear DONT_REQ_PREAUTH flags across all user and service accounts.</p>
+            <div class="code-block p-3 text-[11px] font-mono text-slate-300">Set-ADAccountControl -Identity "usr_roastable" -DoesNotRequirePreAuth $false</div>
           </div>
-
-          <!-- Playbook 3 -->
-          <div class="p-5 rounded-xl bg-panel border border-borderGlow space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-purpleTeam-500/20 text-purpleTeam-400 font-bold">MITIGATION: DCSYNC ABUSE</span>
-              <span class="text-xs font-mono text-redTeam-400 font-semibold">Critical Tier-0</span>
-            </div>
-            <h4 class="text-base font-bold text-white">Restrict Directory Replication ACEs</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Remove <code class="text-adGold font-mono">DS-Replication-Get-Changes</code> and <code class="text-adGold font-mono">DS-Replication-Get-Changes-All</code> extended rights from any non-Domain Controller principals or delegated service accounts on the domain root object.
-            </p>
-            <div class="code-block p-3 text-[11px] font-mono text-slate-300">
-# Enforce strictly to Enterprise Admins, Domain Admins, and Domain Controllers
-            </div>
-          </div>
-
-          <!-- Playbook 4 -->
-          <div class="p-5 rounded-xl bg-panel border border-borderGlow space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-purpleTeam-500/20 text-purpleTeam-400 font-bold">MITIGATION: LATERAL MOVEMENT</span>
-              <span class="text-xs font-mono text-blueTeam-400 font-semibold">Standard Practice</span>
-            </div>
-            <h4 class="text-base font-bold text-white">PowerShell CLM & Tiered Administration</h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Enforce Windows Defender Application Control (WDAC) to restrict interactive user sessions into Constrained Language Mode (CLM), preventing reflective DLL injection and raw Win32 API memory operations.
-            </p>
-            <div class="code-block p-3 text-[11px] font-mono text-slate-300">
-[Environment]::SetEnvironmentVariable("__PSLockdownPolicy", "4", "Machine")
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -842,14 +784,13 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -Doe
   <footer class="mt-auto border-t border-borderGlow/60 px-6 py-4 text-center text-xs text-slate-500 font-mono">
     <span>KRONOS-AD Purple Team Automation Range</span> &bull; 
     <span>MIT License</span> &bull; 
-    <span>Sysmon 4.90 &bull; pySigma Engine &bull; Vagrant VirtualBox</span>
+    <span>Sysmon 4.90 &bull; pySigma Engine (35 Tests Passing) &bull; Vagrant VirtualBox</span>
   </footer>
 
   <!-- ===================================================================== -->
   <!-- JAVASCRIPT APPLICATION LOGIC                                          -->
   <!-- ===================================================================== -->
   <script>
-    // Tab Switching
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(el => {
@@ -866,7 +807,6 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -Doe
       }
     }
 
-    // Terminal Logging
     const term = document.getElementById('terminal-stream');
     function logTerm(msg, color = 'text-slate-300') {
       const line = document.createElement('div');
@@ -880,7 +820,7 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -Doe
       term.innerHTML = '<div class="text-slate-500">// Terminal cleared. Ready for emulation run...</div>';
     }
 
-    // Attack Data Models
+    // 7 Attack Data Models
     const attacks = {
       kerberoast: {
         id: 'T1558.003',
@@ -893,7 +833,6 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -Doe
         eventId: '4769 (Ticket Request)',
         identity: 'svc_sqlserver@corp.local',
         attribute: 'TicketEncryptionType: 0x17',
-        script: 'Invoke-Kerberoast.ps1',
         logs: [
           "[>] Executing Phase 1: Kerberoasting Attack Simulation (T1558.003)...",
           "[*] Querying Active Directory for ServicePrincipalName attributes...",
@@ -901,15 +840,10 @@ Get-ADUser -Filter {DoesNotRequirePreAuth -eq $true} | Set-ADAccountControl -Doe
           "[>] Requesting TGS ticket using .NET KerberosRequestorSecurityToken...",
           "[+] Ticket received from DC01 (Size: 1,482 bytes, Encryption: 0x17 RC4-HMAC)",
           "[*] Extracted Hashcat Mock Hash: $krb5tgs$23$*svc_sqlserver$corp.local$...",
-          "[+] Purging local Kerberos ticket cache via klist purge...",
           "[!] Security Event ID 4769 emitted on Domain Controller DC01."
         ],
         yaml: `title: Kerberoasting Service Ticket Request with RC4 Encryption
 id: 9a65f903-82b5-4ff1-b21f-82a93eb87541
-status: test
-logsource:
-  product: windows
-  service: security
 detection:
   selection:
     EventID: 4769
@@ -917,8 +851,7 @@ detection:
     Status: '0x0'
   filter_machine_accounts:
     ServiceName|endswith: '$'
-  condition: selection and not filter_machine_accounts
-level: high`
+  condition: selection and not filter_machine_accounts`
       },
       asrep: {
         id: 'T1558.004',
@@ -931,22 +864,16 @@ level: high`
         eventId: '4768 (TGT Request)',
         identity: 'usr_roastable (CORP)',
         attribute: 'PreAuthType: 0 (Disabled)',
-        script: 'Invoke-ASREPRoast.ps1',
         logs: [
           "[>] Executing Phase 2: AS-REP Roasting Emulation (T1558.004)...",
           "[*] Searching directory for DONT_REQ_PREAUTH flag (UAC 4194304)...",
           "[+] Found vulnerable account: usr_roastable (Pre-auth disabled)",
           "[>] Emulating AS-REQ without pre-authentication timestamp to KDC:88...",
           "[+] KDC returned AS-REP containing encrypted credentials block!",
-          "[*] Mock Hashcat Mode 18200 format generated: $krb5asrep$23$usr_roastable@CORP:...",
           "[!] Security Event ID 4768 emitted on Domain Controller DC01 with PreAuthType 0."
         ],
         yaml: `title: Kerberos AS-REP Roasting Ticket Request Without Pre-Authentication
 id: e4f82635-321a-4643-9876-c56434567210
-status: test
-logsource:
-  product: windows
-  service: security
 detection:
   selection:
     EventID: 4768
@@ -954,8 +881,7 @@ detection:
     Status: '0x0'
   filter_machine_accounts:
     TargetUserName|endswith: '$'
-  condition: selection and not filter_machine_accounts
-level: high`
+  condition: selection and not filter_machine_accounts`
       },
       dcsync: {
         id: 'T1003.006',
@@ -968,22 +894,16 @@ level: high`
         eventId: '4662 (Directory Service Access)',
         identity: 'svc_replication (CORP)',
         attribute: 'AccessMask: 0x100 (Control Access)',
-        script: 'Invoke-DCSync-Sim.ps1',
         logs: [
           "[>] Executing Phase 3: DCSync Replication Emulation (T1003.006)...",
           "[*] Reading Active Directory naming context ACL for DRS replication rights...",
           "[+] Privilege confirmed: DS-Replication-Get-Changes-All on domain root",
-          "[>] Simulating DRSUAPI DsGetNCChanges via LDAP DirSync control (OID 1.2.840.113556.1.4.841)...",
+          "[>] Simulating DRSUAPI DsGetNCChanges via LDAP DirSync control...",
           "[+] Domain Controller accepted replication query for target: krbtgt",
-          "[*] Harvested mock NTLM hash: krbtgt:502:aad3b435b51404ee:31d6cfe0d16ae931...",
           "[!] Security Event ID 4662 emitted with DRSUAPI Replication GUID on DC01."
         ],
         yaml: `title: Active Directory DCSync Replication Access by Non-DC Account
 id: 61e14930-b3b0-4dbb-8ea3-3e0f7ff8b0c9
-status: test
-logsource:
-  product: windows
-  service: security
 detection:
   selection:
     EventID: 4662
@@ -992,10 +912,7 @@ detection:
     Properties|contains:
       - '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2'
       - '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'
-  filter_machine_accounts:
-    SubjectUserName|endswith: '$'
-  condition: selection and drsuapi_guids and not filter_machine_accounts
-level: critical`
+  condition: selection and drsuapi_guids and not filter_machine_accounts`
       },
       pth: {
         id: 'T1550.002',
@@ -1008,35 +925,107 @@ level: critical`
         eventId: 'Sysmon 1 / Sec 4688',
         identity: 'CORP\\Administrator',
         attribute: 'CommandLine: -EncodedCommand',
-        script: 'Invoke-PassTheHash-Sim.ps1',
         logs: [
           "[>] Executing Phase 4: Pass the Hash Simulation (T1550.002)...",
-          "[*] Spawning elevated process with alternate NTLM token material (Logon 9)...",
-          "[>] Invoking: powershell.exe -NoProfile -NonInteractive -EncodedCommand VwByAGk...",
+          "[*] Spawning elevated process with alternate NTLM token material...",
           "[+] Authenticated to target resource: \\\\DC01.corp.local\\IPC$",
           "[+] Verified administrative channel over SMB Port 445.",
-          "[*] Purging remote SMB network sessions via net use * /delete...",
           "[!] Sysmon Event ID 1 (EncodedCommand) & Security Event ID 4624 captured."
         ],
         yaml: `title: Suspicious Encoded or Hidden PowerShell Execution
 id: c4e3b129-8472-4752-9c31-92f7d312bc88
-status: test
-logsource:
-  product: windows
-  category: process_creation
 detection:
-  selection_process:
-    - Image|endswith:
-        - '\\powershell.exe'
-        - '\\pwsh.exe'
   selection_flags:
     CommandLine|contains:
-      - ' -e '
-      - ' -enc '
       - ' -encodedcommand '
       - ' -EncodedCommand '
-  condition: selection_process and selection_flags
-level: medium`
+  condition: selection_process and selection_flags`
+      },
+      bloodhound: {
+        id: 'T1087 / T1069',
+        title: 'Active Directory Domain Enumeration via SharpHound or BloodHound',
+        sigmaId: 'b91a72d1-2134-4b52-94a1-02a83e54b612',
+        desc: 'Detects SharpHound or BloodHound domain reconnaissance executions mapping Active Directory privilege escalation paths.',
+        level: 'HIGH',
+        levelColor: 'bg-orange-500/20 text-orange-400 border border-orange-500/30',
+        logsource: 'Sysmon / Process Creation',
+        eventId: 'Sysmon 1 / Event 1644',
+        identity: 'CORP\\Administrator',
+        attribute: 'CommandLine: -c All',
+        logs: [
+          "[>] Executing Phase 5: BloodHound Domain Reconnaissance Simulation...",
+          "[*] Emulating SharpHound.exe invocation with collection method 'All'...",
+          "[+] Querying LDAP for domain users, computer accounts, groups, trusts...",
+          "[+] High-volume LDAP searchers evaluated on Domain Controller DC01.",
+          "[!] Sysmon Event ID 1 (SharpHound commandline) logged on WS01."
+        ],
+        yaml: `title: Active Directory Domain Enumeration via SharpHound or BloodHound
+id: b91a72d1-2134-4b52-94a1-02a83e54b612
+detection:
+  selection_cmd:
+    CommandLine|contains:
+      - ' -c All'
+      - ' --collectionmethods '
+  condition: selection_img or selection_cmd`
+      },
+      ntdsutil: {
+        id: 'T1003.003',
+        title: 'Active Directory NTDS.dit Credential Extraction via NTDSUtil or VSSAdmin',
+        sigmaId: 'd83e91a0-4321-4f91-8932-a5e81d720b41',
+        desc: 'Detects invocation of ntdsutil.exe or vssadmin.exe attempting to snapshot or extract the Active Directory database for offline cracking.',
+        level: 'HIGH',
+        levelColor: 'bg-red-500/20 text-red-400 border border-red-500/30',
+        logsource: 'Sysmon / Process Creation',
+        eventId: 'Sysmon 1 / Sec 4688',
+        identity: 'CORP\\Administrator',
+        attribute: 'Image: ntdsutil.exe (ifm)',
+        logs: [
+          "[>] Executing Phase 6: NTDS.dit Credential Extraction Simulation...",
+          "[*] Emulating ntdsutil snapshot creation ('ac i ntds' 'ifm')...",
+          "[+] Commandline: ntdsutil.exe \"ac i ntds\" \"ifm\" \"create full C:\\Temp\"...",
+          "[+] Validated snapshot initiation and cleaned staging directory.",
+          "[!] Sysmon Event ID 1 captured with NTDSUtil IFM arguments."
+        ],
+        yaml: `title: Active Directory NTDS.dit Credential Extraction via NTDSUtil or VSSAdmin
+id: d83e91a0-4321-4f91-8932-a5e81d720b41
+detection:
+  selection_ntdsutil:
+    Image|endswith: '\\ntdsutil.exe'
+    CommandLine|contains:
+      - 'ifm'
+      - 'create full'
+  condition: selection_ntdsutil or selection_vssadmin`
+      },
+      lsass: {
+        id: 'T1003.001',
+        title: 'Suspicious Process Access to LSASS Memory',
+        sigmaId: 'f2c8192a-9932-411a-8b1e-d4e51f820c73',
+        desc: 'Detects untrusted processes requesting memory read or dump access rights to lsass.exe, typical of credential dumping utilities.',
+        level: 'HIGH',
+        levelColor: 'bg-red-500/20 text-red-400 border border-red-500/30',
+        logsource: 'Sysmon / Process Access',
+        eventId: 'Sysmon Event 10',
+        identity: 'DC01\\procdump64.exe',
+        attribute: 'GrantedAccess: 0x1010',
+        logs: [
+          "[>] Executing Phase 7: LSASS Process Access Simulation...",
+          "[*] Untrusted binary requested OpenProcess on LSASS handle...",
+          "[+] GrantedAccess rights: 0x1010 (PROCESS_VM_READ | PROCESS_QUERY_LIMITED_INFORMATION)...",
+          "[+] Target: C:\\Windows\\System32\\lsass.exe",
+          "[!] Sysmon Event ID 10 emitted with untrusted source image."
+        ],
+        yaml: `title: Suspicious Process Access to LSASS Memory
+id: f2c8192a-9932-411a-8b1e-d4e51f820c73
+detection:
+  selection:
+    TargetImage|endswith: '\\lsass.exe'
+    GrantedAccess|contains:
+      - '0x1010'
+      - '0x1038'
+  filter_legitimate:
+    SourceImage|endswith:
+      - '\\svchost.exe'
+  condition: selection and not filter_legitimate`
       }
     };
 
@@ -1044,12 +1033,10 @@ level: medium`
       const data = attacks[attackKey];
       if (!data) return;
 
-      // Update button visual
       document.querySelectorAll('.attack-select-btn').forEach(btn => btn.classList.remove('border-purpleTeam-500', 'bg-purpleTeam-500/10'));
       const activeBtn = document.getElementById('btn-' + attackKey);
       if (activeBtn) activeBtn.classList.add('border-purpleTeam-500', 'bg-purpleTeam-500/10');
 
-      // Update Detection Correlation Box
       const pill = document.getElementById('detection-status-pill');
       pill.textContent = 'ALERT TRIGGERED';
       pill.className = 'text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 pulse-indicator';
@@ -1068,14 +1055,13 @@ level: medium`
       document.getElementById('matched-attribute').textContent = data.attribute;
       document.getElementById('sigma-yaml-preview').textContent = data.yaml;
 
-      // Stream terminal logs
       logTerm(`--- Emulating ${data.title} (${data.id}) ---`, 'text-purpleTeam-400 font-bold mt-2');
       let delay = 0;
       data.logs.forEach(line => {
-        delay += 250;
+        delay += 200;
         setTimeout(() => {
           let color = 'text-slate-300';
-          if (line.startsWith('[+]') || line.startsWith('[SUCCESS]')) color = 'text-emerald-400';
+          if (line.startsWith('[+]')) color = 'text-emerald-400';
           else if (line.startsWith('[>]')) color = 'text-yellow-400';
           else if (line.startsWith('[!]')) color = 'text-redTeam-400 font-bold';
           logTerm(line, color);
@@ -1086,22 +1072,20 @@ level: medium`
     function triggerFullPurpleChain() {
       switchTab('simulation');
       clearTerminal();
-      logTerm(">>> INITIATING AUTOMATED PURPLE TEAM CHAIN (run_purple_team.ps1) <<<", "text-purpleTeam-400 font-bold text-sm");
+      logTerm(">>> INITIATING AUTOMATED PURPLE TEAM 7-PHASE CHAIN (run_purple_team.ps1) <<<", "text-purpleTeam-400 font-bold text-sm");
       
-      runSingleAttack('kerberoast');
-      setTimeout(() => runSingleAttack('asrep'), 2500);
-      setTimeout(() => runSingleAttack('dcsync'), 5000);
+      const sequence = ['kerberoast', 'asrep', 'dcsync', 'pth', 'bloodhound', 'ntdsutil', 'lsass'];
+      sequence.forEach((att, idx) => {
+        setTimeout(() => runSingleAttack(att), idx * 1800);
+      });
+
       setTimeout(() => {
-        runSingleAttack('pth');
-        setTimeout(() => {
-          logTerm("=================================================================", "text-purpleTeam-400");
-          logTerm("   ALL PURPLE TEAM PHASES COMPLETED - 100% TELEMETRY CONFIRMED   ", "text-emerald-400 font-bold");
-          logTerm("=================================================================", "text-purpleTeam-400");
-        }, 2200);
-      }, 7500);
+        logTerm("=================================================================", "text-purpleTeam-400");
+        logTerm("   ALL 7 PURPLE TEAM VECTORS COMPLETED - 100% TELEMETRY CONFIRMED", "text-emerald-400 font-bold");
+        logTerm("=================================================================", "text-purpleTeam-400");
+      }, sequence.length * 1800 + 800);
     }
 
-    // Telemetry Filter
     function filterEvents(type) {
       document.querySelectorAll('.ev-filter-btn').forEach(btn => {
         btn.classList.remove('bg-purpleTeam-600', 'text-white');

@@ -1,7 +1,7 @@
 """
 Unit tests for Detection Matching against synthetic Windows Event logs.
 Verifies that Sigma rules accurately match simulated attack telemetry
-and filter benign/machine behavior.
+and filter benign/machine behavior across all 7 detection engineering vectors.
 """
 
 import json
@@ -47,11 +47,8 @@ class TestKerberoastDetection:
 
     def test_kerberoast_filter_machine_account(self):
         event = load_event("event_kerberoast.json")
-        # Benign computer ticket request
         benign_event = dict(event)
         benign_event["ServiceName"] = "DC01$"
-
-        # Should be filtered out
         assert benign_event["ServiceName"].endswith("$")
 
 
@@ -74,7 +71,6 @@ class TestASREPRoastDetection:
 
     def test_asrep_benign_preauth_not_matched(self):
         event = load_event("event_asrep.json")
-        # Standard Kerberos pre-authentication (PA-ENC-TIMESTAMP = 2)
         normal_auth = dict(event)
         normal_auth["PreAuthType"] = "2"
 
@@ -107,10 +103,8 @@ class TestDCSyncDetection:
 
     def test_dcsync_dc_replication_filtered(self):
         event = load_event("event_dcsync.json")
-        # Legitimate domain controller replication
         dc_event = dict(event)
         dc_event["SubjectUserName"] = "DC02$"
-
         assert dc_event["SubjectUserName"].endswith("$")
 
 
@@ -138,3 +132,76 @@ class TestSuspiciousPowerShellDetection:
         flags = rule["detection"]["selection_flags"]["CommandLine|contains"]
         flag_match = any(flag in benign_cmd for flag in flags)
         assert not flag_match
+
+
+class TestBloodHoundDetection:
+    """Validate detection logic for SharpHound / BloodHound LDAP queries (T1087 / T1069)."""
+
+    def test_bloodhound_event_matches(self):
+        event = load_event("event_bloodhound.json")
+        rule = load_rule("win_ad_bloodhound_ldap_queries.yml")
+
+        # Check image or commandline selection
+        image = event.get("Image", "")
+        img_match = any(image.endswith(ext.replace("\\", "")) for ext in ["SharpHound.exe", "BloodHound.exe"])
+        
+        flags = rule["detection"]["selection_cmd"]["CommandLine|contains"]
+        cmdline = event.get("CommandLine", "")
+        flag_match = any(flag.strip() in cmdline for flag in flags)
+        
+        assert img_match or flag_match, "Neither SharpHound image nor CLI flag matched"
+
+    def test_benign_process_not_matched(self):
+        rule = load_rule("win_ad_bloodhound_ldap_queries.yml")
+        benign_cmd = "notepad.exe C:\\Users\\Public\\notes.txt"
+        flags = rule["detection"]["selection_cmd"]["CommandLine|contains"]
+        assert not any(flag.strip() in benign_cmd for flag in flags)
+
+
+class TestNTDSUtilDetection:
+    """Validate detection logic for NTDS.dit snapshot extraction (T1003.003)."""
+
+    def test_ntdsutil_event_matches(self):
+        event = load_event("event_ntdsutil.json")
+        rule = load_rule("win_ad_ntdsutil_shadowcopy_dump.yml")
+
+        image = event.get("Image", "").lower()
+        assert image.endswith("ntdsutil.exe")
+
+        cmdline = event.get("CommandLine", "").lower()
+        ntds_flags = [f.lower() for f in rule["detection"]["selection_ntdsutil"]["CommandLine|contains"]]
+        assert any(flag in cmdline for flag in ntds_flags)
+
+    def test_benign_cmd_not_matched(self):
+        rule = load_rule("win_ad_ntdsutil_shadowcopy_dump.yml")
+        benign_cmd = "calc.exe"
+        ntds_flags = rule["detection"]["selection_ntdsutil"]["CommandLine|contains"]
+        assert not any(f in benign_cmd for f in ntds_flags)
+
+
+class TestLSASSAccessDetection:
+    """Validate detection logic for LSASS process memory access (T1003.001)."""
+
+    def test_lsass_access_event_matches(self):
+        event = load_event("event_lsass_access.json")
+        rule = load_rule("win_susp_lsass_process_access.yml")
+
+        target = event.get("TargetImage", "").lower()
+        assert target.endswith("lsass.exe")
+
+        granted = event.get("GrantedAccess", "")
+        masks = rule["detection"]["selection"]["GrantedAccess|contains"]
+        assert any(m in granted for m in masks)
+
+        source = event.get("SourceImage", "").lower()
+        filters = [f.replace("\\", "").lower() for f in rule["detection"]["filter_legitimate"]["SourceImage|endswith"]]
+        assert not any(source.endswith(f) for f in filters)
+
+    def test_lsass_legitimate_svchost_filtered(self):
+        event = load_event("event_lsass_access.json")
+        legit_event = dict(event)
+        legit_event["SourceImage"] = "C:\\Windows\\System32\\svchost.exe"
+
+        rule = load_rule("win_susp_lsass_process_access.yml")
+        filters = [f.replace("\\", "").lower() for f in rule["detection"]["filter_legitimate"]["SourceImage|endswith"]]
+        assert any(legit_event["SourceImage"].lower().endswith(f) for f in filters)
