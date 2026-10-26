@@ -1,0 +1,25 @@
+# Pre-commit configuration for Purple Team Detection Engineering Range
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        files: ^tests/
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        files: ^tests/
+        args: ['--max-line-length=120', '--extend-ignore=E203,W503']
