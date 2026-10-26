@@ -1,0 +1,14 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Provider_Name": "Microsoft-Windows-Sysmon",
+  "TimeCreated": "2026-10-26T12:00:15.000000Z",
+  "Computer": "WS01.corp.local",
+  "Image": "C:\\Users\\Public\\SharpHound.exe",
+  "OriginalFileName": "SharpHound.exe",
+  "CommandLine": "SharpHound.exe -c All --domain corp.local --outputdirectory C:\\Users\\Public",
+  "CurrentDirectory": "C:\\Users\\Public\\",
+  "User": "CORP\\Administrator",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe /c run_bloodhound.bat"
+}

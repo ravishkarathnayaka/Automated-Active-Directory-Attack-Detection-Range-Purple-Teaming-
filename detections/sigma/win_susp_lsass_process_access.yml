@@ -1,0 +1,35 @@
+title: Suspicious Process Access to LSASS Memory
+id: f2c8192a-9932-411a-8b1e-d4e51f820c73
+status: test
+description: Detects processes requesting memory read or dump access rights to lsass.exe (Sysmon Event ID 10), indicative of LSASS credential dumping.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+  - https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon
+author: Purple Team Detection Engineering
+date: 2026/10/26
+modified: 2026/10/26
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess|contains:
+      - '0x1010'
+      - '0x1038'
+      - '0x1438'
+      - '0x1fffff'
+  filter_legitimate:
+    SourceImage|endswith:
+      - '\svchost.exe'
+      - '\csrss.exe'
+      - '\services.exe'
+      - '\wininit.exe'
+  condition: selection and not filter_legitimate
+falsepositives:
+  - Antivirus or EDR agents inspecting process memory
+  - Legitimate debugging or diagnostic utilities
+level: high

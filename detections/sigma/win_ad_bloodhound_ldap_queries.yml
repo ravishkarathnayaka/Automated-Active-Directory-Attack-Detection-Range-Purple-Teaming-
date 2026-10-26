@@ -1,0 +1,36 @@
+title: Active Directory Domain Enumeration via SharpHound or BloodHound
+id: b91a72d1-2134-4b52-94a1-02a83e54b612
+status: test
+description: Detects the execution of SharpHound or BloodHound domain reconnaissance tools used to map Active Directory attack paths.
+references:
+  - https://attack.mitre.org/techniques/T1087/002/
+  - https://attack.mitre.org/techniques/T1069/002/
+author: Purple Team Detection Engineering
+date: 2026/10/26
+modified: 2026/10/26
+tags:
+  - attack.discovery
+  - attack.t1087.002
+  - attack.t1069.002
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_img:
+    - Image|endswith:
+        - '\SharpHound.exe'
+        - '\BloodHound.exe'
+    - OriginalFileName:
+        - 'SharpHound.exe'
+  selection_cmd:
+    CommandLine|contains:
+      - ' -c All'
+      - ' --collectionmethods '
+      - ' --collectionmethod '
+      - 'Invoke-BloodHound'
+      - ' -c DCOnly'
+  condition: selection_img or selection_cmd
+falsepositives:
+  - Authorized security auditing or internal penetration testing
+  - Legitimate directory migration tools
+level: high

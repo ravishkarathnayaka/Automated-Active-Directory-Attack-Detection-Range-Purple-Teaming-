@@ -1,0 +1,14 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Provider_Name": "Microsoft-Windows-Sysmon",
+  "TimeCreated": "2026-10-26T12:05:30.000000Z",
+  "Computer": "DC01.corp.local",
+  "Image": "C:\\Windows\\System32\\ntdsutil.exe",
+  "OriginalFileName": "ntdsutil.exe",
+  "CommandLine": "ntdsutil.exe \"ac i ntds\" \"ifm\" \"create full C:\\Windows\\Temp\\backup\" q q",
+  "CurrentDirectory": "C:\\Windows\\System32\\",
+  "User": "CORP\\Administrator",
+  "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe"
+}

@@ -1,0 +1,11 @@
+{
+  "EventID": 10,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Provider_Name": "Microsoft-Windows-Sysmon",
+  "TimeCreated": "2026-10-26T12:10:00.000000Z",
+  "Computer": "DC01.corp.local",
+  "SourceImage": "C:\\Users\\Public\\procdump64.exe",
+  "TargetImage": "C:\\Windows\\System32\\lsass.exe",
+  "GrantedAccess": "0x1010",
+  "CallTrace": "C:\\Windows\\SYSTEM32\\ntdll.dll+9d494|C:\\Windows\\System32\\KERNELBASE.dll+2c74e"
+}
